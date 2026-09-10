@@ -27,6 +27,66 @@ extern "C" {
         p_;                                                                    \
     })
 
+/* --- (dice/events/pthread.h) --- */
+
+static inline int
+coldtrace_pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+                         void *(*start_routine)(void *), void *arg)
+{
+    typedef int (*fn_t)(pthread_t *, const pthread_attr_t *, void *(*)(void *),
+                        void *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_create");
+    return fn(thread, attr, start_routine, arg);
+}
+
+static inline int
+coldtrace_pthread_join(pthread_t thread, void **retval)
+{
+    typedef int (*fn_t)(pthread_t, void **);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_join");
+    return fn(thread, retval);
+}
+
+static inline void
+coldtrace_pthread_exit(void *retval)
+{
+    typedef void (*fn_t)(void *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_exit");
+    fn(retval);
+}
+
+static inline int
+coldtrace_pthread_mutex_lock(pthread_mutex_t *mutex)
+{
+    typedef int (*fn_t)(pthread_mutex_t *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_mutex_lock");
+    return fn(mutex);
+}
+
+static inline int
+coldtrace_pthread_mutex_unlock(pthread_mutex_t *mutex)
+{
+    typedef int (*fn_t)(pthread_mutex_t *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_mutex_unlock");
+    return fn(mutex);
+}
+
+static inline int
+coldtrace_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+{
+    typedef int (*fn_t)(pthread_cond_t *, pthread_mutex_t *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_cond_wait");
+    return fn(cond, mutex);
+}
+
+static inline int
+coldtrace_pthread_cond_signal(pthread_cond_t *cond)
+{
+    typedef int (*fn_t)(pthread_cond_t *);
+    fn_t fn = (fn_t)COLDTRACE_REAL_("pthread_cond_signal");
+    return fn(cond);
+}
+
 /* --- (dice/events/malloc.h) --- */
 
 static inline void *

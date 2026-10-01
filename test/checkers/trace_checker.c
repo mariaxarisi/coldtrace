@@ -531,8 +531,8 @@ coldtrace_main_thread_fini()
     }
 
     if (failed || vatomic32_read_rlx(&failed_writer_close) == 1) {
-        log_warn("TEST FAILED");
+        printf("TRACE_CHECKER: TEST FAILED\n");
     } else {
-        log_info("TEST PASSED");
+        printf("TRACE_CHECKER: TEST PASSED\n");
     }
 }

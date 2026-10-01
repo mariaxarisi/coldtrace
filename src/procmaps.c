@@ -27,6 +27,17 @@
 static int mkdir_(const char *path);
 static int cp_(const char *src, const char *dst);
 
+// Check files deleted after they were mapped.
+static bool
+is_deleted_(const char *path)
+{
+    static const char deleted[] = " (deleted)";
+    size_t len                  = strlen(path);
+    size_t dlen                 = sizeof(deleted) - 1;
+
+    return (len >= dlen && strcmp(path + len - dlen, deleted) == 0);
+}
+
 static int
 copy_proc_maps_(const char *path)
 {
@@ -73,6 +84,10 @@ copy_mapped_files_(const char *path)
         }
         // Remove newline if present.
         src[strcspn(src, "\n")] = 0;
+
+        if (is_deleted_(src)) {
+            continue;
+        }
 
         // Skip duplicates.
         if (strstr(unique, src)) {

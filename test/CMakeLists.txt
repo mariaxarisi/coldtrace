@@ -2,6 +2,19 @@ include_directories(../src)
 include_directories(checkers)
 include_directories(../deps/dice/test/include)
 
+# Copy the coldtrace worker next to the test binaries
+set(COLDTRACE_WORKER_TEST_COPY ${CMAKE_CURRENT_BINARY_DIR}/coldtrace-worker)
+
+add_custom_command(
+  OUTPUT ${COLDTRACE_WORKER_TEST_COPY}
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          $<TARGET_FILE:coldtrace-worker> ${COLDTRACE_WORKER_TEST_COPY}
+  DEPENDS coldtrace-worker $<TARGET_FILE:coldtrace-worker>
+  COMMENT "Copying coldtrace-worker to test directory")
+
+add_custom_target(coldtrace-worker-test-copy ALL
+                  DEPENDS ${COLDTRACE_WORKER_TEST_COPY})
+
 find_package(Python3 3.10 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
